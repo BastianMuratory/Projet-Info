@@ -19,7 +19,7 @@ test.exe : test.c
 
 clean:
 	rm *.exe *.o
-	
+
 git1:
 	cd ..
 
@@ -28,9 +28,10 @@ git2:
 
 git3:
 	git status
-	
+
 git4:
 	git commit -m "commit auto avec le makefile"
-	
+
 git5:
 	git push
+
