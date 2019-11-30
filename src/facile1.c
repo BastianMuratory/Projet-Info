@@ -2,6 +2,13 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+struct Point{
+	float x;
+	float y;
+	float z;
+	float time;
+};
+
 int lire_fin_ligne(){
 	int x=0; // le nombre de charactères
 	char c;
