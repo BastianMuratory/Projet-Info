@@ -17,6 +17,7 @@ clean:
 	rm *.exe *.o
 	
 git:
+	cd ..
 	git add .
 	git status
 	git commit -m "commit auto avec le makefile"
