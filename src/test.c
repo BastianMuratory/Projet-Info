@@ -75,10 +75,14 @@ int main(int argc,char *argv[]){
     Point p1;
     p1=initPoint(p1);
     affPoint(p1);
+    FILE* = data;
+    data = fopen("data.dat" , "a");
     for(int i=0; i<3;i =i+1){
     	p1.x = p1.x+1;
     	p1.z = p1.z+2;
     	affPoint(p1);
+    	fprintf(data,"les coordonnées du point sont : x=%f y=%f z=%f au temp t = %f \n",p.x ,p.y ,p.z ,p.time);
     }
+    fclose(data)
     return 0;
 }
