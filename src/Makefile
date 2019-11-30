@@ -1,5 +1,7 @@
 # exemple de makefile pour pouvoir compiler un fichier utilisant la librairie entrees ailleurs
 # que dans le répertoire EntreesSorties
+
+
 CC= gcc
 CFLAGS=  -Wall -g #-std=c11
 LIB= ../lib
