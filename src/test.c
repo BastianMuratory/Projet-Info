@@ -69,23 +69,8 @@ Point initPoint(Point p){
 	return p;
 }
 
-
-void EntrerParam(float *x , float *y , float *z , float *sigma , float *beta , float *rho){
-    printf("Entrez la coordonée X : \n");
-    lire_decimale(x);
-    printf("Entrez la coordonée Y : \n");
-    lire_decimale(y);
-    printf("Entrez la coordonée Z : \n");
-    lire_decimale(z);
-    printf("Entrez le paramètre σ : \n");
-    lire_decimale(sigma);
-    printf("Entrez le paramètre β : \n");
-    lire_decimale(beta);
-    printf("Entrez le paramètre ρ : \n");
-    lire_decimale(rho);
-}
-
 void affPoint(Point p){
+	//cette fonction servait de vérification durant la création du projet
 	printf("les coordonnées du point sont : x=%f y=%f z=%f au temp t = %f \n",p.x ,p.y ,p.z ,p.time);
 }
 
@@ -152,9 +137,6 @@ int main(int argc,char *argv[]){
     p = pointInitial(p);
     pa1 = parametrage(pa1,&Tmax,&dt);
     
-    
-    affPoint(p);
-    
     //boucle permettant de calculer chacun des points gràce à leur vecteur vitesse associé
     data = fopen("data.dat" , "a");
     saveP(p,data);
@@ -164,6 +146,7 @@ int main(int argc,char *argv[]){
 		saveP(p,data);
 	}
     fclose(data);
+    
     
     
     return 0;
