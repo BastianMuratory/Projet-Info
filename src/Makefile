@@ -23,8 +23,6 @@ git:
 	git add .
 	git status
 	git commit -m "commit auto avec le makefile"
-
-git2:
 	git push
 
 
