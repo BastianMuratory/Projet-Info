@@ -12,27 +12,23 @@ SRC= test.c  # exemple de code utilisant entrees
 
 all : $(EXEC)
 
-git : git1 git2 git3 git4 git5
-
 test.exe : test.c
 	$(CC) $(CFLAGS) test.c   -o  test.exe  -I $(INC) -L $(LIB) $(LDFLAGS)
 
 clean:
 	rm *.exe *.o
 
-git1:
+git:
 	cd ..
-
-git2:
 	git add .
-
-git3:
 	git status
-
-git4:
 	git commit -m "commit auto avec le makefile"
 
-git5:
+git2:
 	git push
-	
+
+
+data:
+	rm data.dat
+	touch data.dat
 
