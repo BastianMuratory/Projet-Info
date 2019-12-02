@@ -110,13 +110,14 @@ Param parametrage(Param pa, float *Tmax, float *dt){
 	return pa;
 }
 
-Point pointinitial(Point p){
+Point pointInitial(Point p){
 	printf("Entrez la coordonée x : ");
 	lire_decimale(&p.x);
 	printf("Entrez la coordonée y : ");
 	lire_decimale(&p.y);
 	printf("Entrez la coordonée z : ");
 	lire_decimale(&p.z);
+	p.time = 0;
 	return p;
 }
 
@@ -128,40 +129,42 @@ Vitesse vitesse(Vitesse v , Point p , Param pa){
 	return v;
 }
 
-void PositionSuivante(Point p, Vitesse v, Param pa, float dt){
+Point positionSuivante(Point p, Vitesse v, Param pa, float dt){
 	p.x += v.x;
 	p.y += v.y;
 	p.z += v.z;
 	p.time += dt;
+	return p;
 }
 
 ///////////////////////////////////////////////////////
 
 int main(int argc,char *argv[]){
-    Point p1;
+	//les différentes variables nécessaires
+    Point p;
     Param pa1;
     float Tmax;
     float dt;
-    
     Vitesse v1;
     FILE* data;
     
-    
-    p1 = pointinitial(p1);
+    //entrée des coordonées initiales par l'utilisateur
+    p = pointInitial(p);
     pa1 = parametrage(pa1,&Tmax,&dt);
-    affPoint(p1);
-    
-    printf("On a donc %f  %f  %f  temps = %f \n",pa1.sigma , pa1.rho, pa1.beta , Tmax);
-    v1 = vitesse(v1,p1,pa1);
     
     
+    affPoint(p);
     
+    //boucle permettant de calculer chacun des points gràce à leur vecteur vitesse associé
     data = fopen("data.dat" , "a");
-	saveP(p1, data);
-	
-	
-	p1.x += 4;
-	saveP(p1, data);
+    saveP(p,data);
+	while(p.time<Tmax){
+		v1 = vitesse(v1,p,pa1);
+		p = positionSuivante(p,v1,pa1,dt);
+		saveP(p,data);
+	}
     fclose(data);
+    
+    
     return 0;
 }

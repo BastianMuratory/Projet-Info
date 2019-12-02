@@ -25,7 +25,6 @@ git:
 	git commit -m "commit auto avec le makefile"
 	git push
 
-
 data:
 	rm data.dat
 	touch data.dat
