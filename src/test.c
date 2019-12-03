@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 
-//////////////////////////////////////Structures////////////////////////////////////////////////
+//////////////////////////////////////Structures//////////////////////////////////////
 
 struct Point{
 	float x;
@@ -30,7 +30,7 @@ struct Param{
 };
 typedef struct Param Param;
 
-//////////////////////////////////////Entrées///////////////////////////////////////////
+//////////////////////////////////////Entrées/////////////////////////////////////////
 
 int lire_fin_ligne(){
 	int x=0; // le nombre de charactères
@@ -63,7 +63,7 @@ void lire_decimale(float *a){
 	}while((lu!=1)||(nb>0));
 }
 
-//////////////////////////////////////////////Trucs qui servent à rien//////////////////////////////////
+//////////////////////////////////////////////////////////////
 
 Point initPoint(Point p){
 	p.x = 0;
@@ -82,7 +82,25 @@ void saveP(Point p1,FILE* data){
 	fprintf(data,"%f %f %f %f \n", p1.t, p1.x, p1.y, p1.z);
 }
 
-///////////////////////////////////////////Lib///////////////////////////////////////////////
+void affiche(int choix){
+	if (choix == 1){
+		printf("Vous avez choisis le système de lorenz\n\n");
+	}else if (choix == 2){
+		printf("Vous avez choisis le système de Van der Pol\n\n");
+	}else {
+		printf("Veuillez choisir entre 1 et 2. \nLe programme va maintenant se terminer.\n");
+	}
+}
+
+void affmenu(){
+	printf("\nProgramme de modélisation de la trajectoire d'un point.\n\n");
+	printf("Menu :\n\n");
+	printf("  - 1 : Système de Lorenz.\n");
+	printf("  - 2 : Oscillateur de Van der Pol.\n");
+	printf("  - [autre entrée] : Quitter le programme.\n\n");
+	printf("Entrez le numéro correspondant à l'action de votre choix : ");
+}
+///////////////////////////////////////////////////////////////////////////////////
 
 Param parametrage(Param pa , int choix){
 	if(choix == 1){
@@ -96,26 +114,20 @@ Param parametrage(Param pa , int choix){
 		printf("Entrez le paramètre µ : ");
 		lire_decimale(&pa.mu);
 	}
-	printf("Entrez la valeur de temps élémentaire (dt) : ");
-	lire_decimale(&pa.dt);
 	printf("Entrez le temps de simulation (Tmax) : ");
 	lire_decimale(&pa.Tmax);
+	printf("Entrez la valeur de temps élémentaire (dt) : ");
+	lire_decimale(&pa.dt);
 	return pa;
 }
 
 Point position_initiale(Point p , int choix){
-	if(choix == 1){
-		p.x = 1;
-		p.y = 2;
-		p.z = 3;
-	}else if(choix == 2){
-		printf("Entrez la coordonée x : ");
-		lire_decimale(&p.x);
-		printf("Entrez la coordonée y : ");
-		lire_decimale(&p.y);
-		printf("Entrez la coordonée z : ");
-		lire_decimale(&p.z);
-	}
+	printf("Entrez la coordonée x initiale : ");
+	lire_decimale(&p.x);
+	printf("Entrez la coordonée y initiale : ");
+	lire_decimale(&p.y);
+	printf("Entrez la coordonée z initiale : ");
+	lire_decimale(&p.z);
 	p.t = 0;
 	return p;
 }
@@ -141,7 +153,7 @@ Point position_suivante(Point p, Vecteur v, Param pa){
 	return p;
 }
 
-///////////////////////////////////////////test.c////////////////////////////////////////
+//////////////////////////////////////test.c////////////////////////////////////////
 
 int main(int argc , char *argv[]){
 	//variables
@@ -152,18 +164,14 @@ int main(int argc , char *argv[]){
 	int choix;
 	
 	//choix du système
-	printf("\nProgramme de modélisation de la trajectoire d'un point\n\n");
-	printf("Menu :\n\n");
-	printf("1 : Système de Lorenz\n");
-	printf("2 : Oscillateur de Van der Pol\n");
-	printf("[autre entrée] : Quitter le programme\n\n");
-	printf("Entrez le numéro correspondant à l'action de votre choix : ");
+	affmenu();
 	scanf("%d" , &choix);
+	affiche(choix);
 	
 	if((choix == 1) || (choix == 2)){
 		//entrées
-		parametrage(pa1 , choix);
-		position_initiale(p , choix);
+		pa1 = parametrage(pa1 , choix);
+		p = position_initiale(p , choix);
 		
 		//calcul de la trajectoire
 		data = fopen("data.dat" , "a");
