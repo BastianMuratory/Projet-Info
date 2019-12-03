@@ -63,17 +63,17 @@ Point initPoint(Point p){
 	p.x = 0;
 	p.y = 0;
 	p.z = 0;
-	p.time = 0;
+	p.t = 0;
 	return p;
 }
 
 void affPoint(Point p){
 	//cette fonction servait de vérification durant la création du projet
-	printf("les coordonnées du point sont : x=%f y=%f z=%f au temp t = %f \n", p.x, p.y, p.z, p.time);
+	printf("les coordonnées du point sont : x=%f y=%f z=%f au temp t = %f \n", p.x, p.y, p.z, p.t);
 }
 
 void saveP(Point p1,FILE* data){
-	fprintf(data,"%f %f %f %f \n", p1.time, p1.x, p1.y, p1.z);
+	fprintf(data,"%f %f %f %f \n", p1.t, p1.x, p1.y, p1.z);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
