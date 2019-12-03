@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 
+//////////////////////////////////////Structures////////////////////////////////////////////////
+
 struct Point{
 	float x;
 	float y;
@@ -23,10 +25,12 @@ struct Param{
 	float rho;
 	float beta;
 	float mu;
+	float dt;
+	float Tmax;
 };
 typedef struct Param Param;
 
-/////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////Entrées///////////////////////////////////////////
 
 int lire_fin_ligne(){
 	int x=0; // le nombre de charactères
@@ -59,6 +63,8 @@ void lire_decimale(float *a){
 	}while((lu!=1)||(nb>0));
 }
 
+//////////////////////////////////////////////Trucs qui servent à rien//////////////////////////////////
+
 Point initPoint(Point p){
 	p.x = 0;
 	p.y = 0;
@@ -76,87 +82,101 @@ void saveP(Point p1,FILE* data){
 	fprintf(data,"%f %f %f %f \n", p1.t, p1.x, p1.y, p1.z);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////Lib///////////////////////////////////////////////
 
-Param parametrage(Param pa, float *Tmax, float *dt){
-	printf("Entrez le paramètre σ : ");
-	lire_decimale(&pa.sigma);
-	printf("Entrez le paramètre ρ : ");
-	lire_decimale(&pa.rho);
-	printf("Entrez le paramètre β : ");
-	lire_decimale(&pa.beta);
-	printf("Entrez le paramètre µ : ");
-	lire_decimale(&pa.mu);
-	printf("Entrez le temps de simulation (Tmax) : ");
-	lire_decimale(Tmax);
+Param parametrage(Param pa , int choix){
+	if(choix == 1){
+		printf("Entrez le paramètre σ : ");
+		lire_decimale(&pa.sigma);
+		printf("Entrez le paramètre ρ : ");
+		lire_decimale(&pa.rho);
+		printf("Entrez le paramètre β : ");
+		lire_decimale(&pa.beta);
+	}else if(choix == 2){
+		printf("Entrez le paramètre µ : ");
+		lire_decimale(&pa.mu);
+	}
 	printf("Entrez la valeur de temps élémentaire (dt) : ");
-	lire_decimale(dt);
+	lire_decimale(&pa.dt);
+	printf("Entrez le temps de simulation (Tmax) : ");
+	lire_decimale(&pa.Tmax);
 	return pa;
 }
 
-Point pointInitial(Point p){
-	printf("Entrez la coordonée x : ");
-	lire_decimale(&p.x);
-	printf("Entrez la coordonée y : ");
-	lire_decimale(&p.y);
-	printf("Entrez la coordonée z : ");
-	lire_decimale(&p.z);
+Point position_initiale(Point p , int choix){
+	if(choix == 1){
+		p.x = 1;
+		p.y = 2;
+		p.z = 3;
+	}else if(choix == 2){
+		printf("Entrez la coordonée x : ");
+		lire_decimale(&p.x);
+		printf("Entrez la coordonée y : ");
+		lire_decimale(&p.y);
+		printf("Entrez la coordonée z : ");
+		lire_decimale(&p.z);
+	}
 	p.t = 0;
 	return p;
 }
 
-//premier systeme
-Vecteur vitesse1(Vecteur v , Point p , Param pa){
-	v.x = pa.sigma*(p.y-p.x);
-	v.y = p.x*(pa.rho-p.z)-p.y;
-	v.z = p.x*p.y-pa.beta*p.z;
+Vecteur vitesse(Point p , Vecteur v , Param pa , int choix){
+	if(choix == 1){
+		v.x = pa.sigma*(p.y-p.x);
+		v.y = p.x*(pa.rho-p.z)-p.y;
+		v.z = p.x*p.y-pa.beta*p.z;
+	}else if(choix == 2){
+		v.x = pa.mu*(p.x-(p.x*p.x*p.x/3)-p.y);
+		v.y = p.x/pa.mu;
+		v.z = 0;	
+	}
 	return v;
 }
 
-//deuxieme systeme
-Vecteur vitesse2(Vecteur v , Point p , Param pa){
-	v.x = pa.mu*(p.x-(p.x*p.x*p.x/3)-p.y);
-	v.y = p.x/pa.mu;
-	v.z = 0;
-	return v;
-}
-
-Point positionSuivante(Point p, Vecteur v, Param pa, float dt){
+Point position_suivante(Point p, Vecteur v, Param pa){
 	p.x += v.x;
 	p.y += v.y;
 	p.z += v.z;
-	p.t += dt;
+	p.t += pa.dt;
 	return p;
 }
 
-///////////////////////////////////////////////////////
+///////////////////////////////////////////test.c////////////////////////////////////////
 
 int main(int argc , char *argv[]){
-	//les différentes variables nécessaires
+	//variables
 	Point p;
 	Vecteur v;
 	Param pa1;
-	float Tmax,dt;
 	FILE* data;
+	int choix;
 	
-	//choix du systeme
-	int syst;
-	syst = 1;
+	//choix du système
+	printf("\nProgramme de modélisation de la trajectoire d'un point\n\n");
+	printf("Menu :\n\n");
+	printf("1 : Système de Lorenz\n");
+	printf("2 : Oscillateur de Van der Pol\n");
+	printf("[autre entrée] : Quitter le programme\n\n");
+	printf("Entrez le numéro correspondant à l'action de votre choix : ");
+	scanf("%d" , &choix);
 	
-	//entrée des coordonées initiales par l'utilisateur
-	p = pointInitial(p);
-	pa1 = parametrage(pa1 , &Tmax , &dt);
-    
-    //boucle permettant de calculer chacun des points grâce à leur vecteur vitesse associé
-    data = fopen("data.dat" , "a");
-    saveP(p , data);
-    if(syst == 1){
-    	while(p.t < Tmax){
-    		v = vitesse1(v , p , pa1);
-    		p = positionSuivante(p , v , pa1 , dt);
-    		saveP(p , data);
-    	}
-    }
-    fclose(data);
-    return 0;
+	if((choix == 1) || (choix == 2)){
+		//entrées
+		parametrage(pa1 , choix);
+		position_initiale(p , choix);
+		
+		//calcul de la trajectoire
+		data = fopen("data.dat" , "a");
+		saveP(p , data);
+		if(choix == 1){
+			while(p.t < pa1.Tmax){
+				v = vitesse(p , v , pa1 , choix);
+				p = position_suivante(p , v , pa1);
+				saveP(p , data);
+			}
+		}
+		fclose(data);
+	}
+	printf("Fin du programme.\n");
+	return 0;
 }
