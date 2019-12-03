@@ -7,7 +7,7 @@ struct Point{
 	float x;
 	float y;
 	float z;
-	float time;
+	float t;
 };
 typedef struct Point Point;
 
@@ -101,7 +101,7 @@ Point pointInitial(Point p){
 	lire_decimale(&p.y);
 	printf("Entrez la coordonée z : ");
 	lire_decimale(&p.z);
-	p.time = 0;
+	p.t = 0;
 	return p;
 }
 
@@ -125,7 +125,7 @@ Point positionSuivante(Point p, Vecteur v, Param pa, float dt){
 	p.x += v.x;
 	p.y += v.y;
 	p.z += v.z;
-	p.time += dt;
+	p.t += dt;
 	return p;
 }
 
@@ -147,13 +147,13 @@ int main(int argc , char *argv[]){
 	p = pointInitial(p);
 	pa1 = parametrage(pa1 , &Tmax , &dt);
     
-    //boucle permettant de calculer chacun des points gràce à leur vecteur vitesse associé
+    //boucle permettant de calculer chacun des points grâce à leur vecteur vitesse associé
     data = fopen("data.dat" , "a");
     saveP(p , data);
     if(syst == 1){
-    	while(p.time < Tmax){
+    	while(p.t < Tmax){
     		v = vitesse1(v , p , pa1);
-    		p = positionSuivante(p , v , pa1 ,dt);
+    		p = positionSuivante(p , v , pa1 , dt);
     		saveP(p , data);
     	}
     }
