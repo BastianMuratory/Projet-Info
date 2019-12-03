@@ -12,13 +12,13 @@ struct Point{
 };
 
 
-struct Vitesse{
+struct Vecteur{
 	float x;
 	float y;
 	float z;
 };
 
-typedef struct Vitesse Vitesse;
+typedef struct Vecteur Vecteur;
 
 struct Param{
 	float sigma;
@@ -106,15 +106,19 @@ Point pointInitial(Point p){
 	return p;
 }
 
-
-Vitesse vitesse(Vitesse v , Point p , Param pa){
+//premier systeme
+Vecteur vitesse1(Vecteur v , Point p , Param pa){
 	v.x = pa.sigma*(p.y-p.x);
 	v.y = p.x*(pa.rho-p.z)-p.y;
 	v.z = p.x*p.y-pa.beta*p.z;
 	return v;
 }
+//deuxieme systeme
+Vecteur vitesse2(Vecteur v , Point p , Param pa){
+	return v;
+}
 
-Point positionSuivante(Point p, Vitesse v, Param pa, float dt){
+Point positionSuivante(Point p, Vecteur v, Param pa, float dt){
 	p.x += v.x;
 	p.y += v.y;
 	p.z += v.z;
@@ -130,8 +134,13 @@ int main(int argc,char *argv[]){
     Param pa1;
     float Tmax;
     float dt;
-    Vitesse v1;
+    Vecteur v;
     FILE* data;
+    
+    //choix du systeme
+    int syst;
+    syst = 1;
+    
     
     //entrée des coordonées initiales par l'utilisateur
     p = pointInitial(p);
@@ -140,14 +149,13 @@ int main(int argc,char *argv[]){
     //boucle permettant de calculer chacun des points gràce à leur vecteur vitesse associé
     data = fopen("data.dat" , "a");
     saveP(p,data);
-	while(p.time<Tmax){
-		v1 = vitesse(v1,p,pa1);
-		p = positionSuivante(p,v1,pa1,dt);
-		saveP(p,data);
-	}
+    if(syst == 1){
+    	while(p.time<Tmax){
+			v = vitesse1(v,p,pa1);
+			p = positionSuivante(p,v,pa1,dt);
+			saveP(p,data);
+		}
+    }
     fclose(data);
-    
-    
-    
     return 0;
 }
