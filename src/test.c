@@ -168,15 +168,15 @@ int main(int argc , char *argv[]){
 		//calcul de la trajectoire
 		data = fopen("data.dat" , "a");
 		saveP(p , data);
-		if(choix == 1){
-			while(p.t < pa1.Tmax){
-				v = vitesse(p , v , pa1 , choix);
-				p = position_suivante(p , v , pa1);
-				saveP(p , data);
-			}
+		while(p.t < pa1.Tmax){
+			v = vitesse(p , v , pa1 , choix);
+			p = position_suivante(p , v , pa1);
+			saveP(p , data);
 		}
 		fclose(data);
 	}
+	
+	//fin d'execution
 	printf("Fin du programme.\n");
 	return 0;
 }
